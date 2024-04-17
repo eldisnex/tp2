@@ -59,7 +59,9 @@ class Program
     // Cargar nueva persona
     public static void CargarPersona(List<Persona> l)
     {
-        l.Add(new Persona(IngresarDni(), IngresarString("Ingrese apellido"), IngresarString("Ingrese nombre"), IngresarFecha("Ingrese nacimiento"), IngresarEmail()));
+        l.Add(new Persona(IngresarDni(), IngresarString("Ingrese apellido"), IngresarString("Ingrese nombre"), IngresarFecha("Ingrese nacimiento"), IngresarEmail(), IngresarSalario()));
+        if (l.Last().Salario == 0)
+            l.Last().Intereses = IngresarLista("Ingrese intereses.");
         Console.WriteLine($"Se ha creado la persona {l.Last().Nombre} {l.Last().Apellido} y se ha agregado a la lista.");
     }
 
@@ -70,7 +72,8 @@ class Program
             Console.WriteLine("Aún no se ingresaron personas en la lista");
         else
         {
-            int votar = 0, promedio = 0;
+            int votar, promedio, trabajan, porcentajeTrabajan;
+            double ingresos;
             votar = (
                 from p in l
                 where p.PuedeVotar()
@@ -78,12 +81,24 @@ class Program
             promedio = (
                 from p in l
                 select p.ObtenerEdad()
-            ).Sum();
-            promedio /= l.Count;
+            ).Sum() / l.Count;
+            trabajan = (
+                from p in l
+                where p.Salario > 0
+                select 1
+            ).Count();
+            ingresos = (
+                from p in l
+                where p.Salario > 0
+                select p.Salario
+            ).Sum() / trabajan;
+            porcentajeTrabajan = trabajan * 100 / l.Count;
             Console.WriteLine("Estadisticas del censo:");
             Console.WriteLine($"Cantidad de personas: {l.Count}");
             Console.WriteLine($"Cantidad de personas habilitadas para votar: {votar}");
             Console.WriteLine($"Promedio de edad: {promedio}");
+            Console.WriteLine($"El porcentaje de los que trabajan es {porcentajeTrabajan}%");
+            Console.WriteLine($"El promedio de ingresos es {ingresos}");
         }
     }
 
@@ -99,6 +114,12 @@ class Program
             $"Fecha de nacimiento: {l[persona].FechaNacimiento}\n" +
             $"Email: {l[persona].Email}\n" +
             $"Puede votar: {(l[persona].PuedeVotar() ? "Si" : "No")}");
+            if (l[persona].Salario > 0)
+            {
+                Console.WriteLine($"Intereses de {l[persona].Nombre} {l[persona].Apellido}");
+                foreach (string interes in l[persona].Intereses)
+                    Console.WriteLine($"- {interes}");
+            }
         }
         else
             Console.WriteLine("No se encuentra el DNI");
@@ -119,7 +140,12 @@ class Program
     }
 
     // ---- Otras funciones ----
-
+    private static double IngresarSalario()
+    {
+        if (IngresarBool("Trabaja?"))
+            return IngresarDouble("Ingrese salario", 0);
+        return 0;
+    }
     private static int IndicePersona(List<Persona> l, int dni)
     {
         int i = l.Count - 1;
@@ -148,7 +174,6 @@ class Program
         r = new DateTime(y, m, d);
         return r;
     }
-
     private static string IngresarString(string m)
     {
         Console.WriteLine(m);
@@ -163,7 +188,6 @@ class Program
         } while (r / 10000000 == 0);
         return r;
     }
-
     private static int IngresarEnteroPositivo(string m, int min = int.MinValue, int max = int.MaxValue)
     {
         int r;
@@ -180,5 +204,36 @@ class Program
         Console.WriteLine(m);
         return Console.ReadKey().KeyChar;
     }
+    private static bool IngresarBool(string m)
+    {
+        char r;
+        do
+        {
+            Console.WriteLine(m);
+            r = IngresarCaracter("(S)i / (N)o");
+        } while (r != 'S' && r != 'N');
+        return r == 'S';
+    }
+    private static double IngresarDouble(string m, double min = double.MinValue, double max = double.MaxValue)
+    {
+        double r;
+        do
+        {
+            Console.WriteLine(m);
+            r = double.Parse(Console.ReadLine());
+        } while (r < min || r > max);
+        return r;
+    }
 
+    private static List<string> IngresarLista(string m)
+    {
+        List<string> r = new List<string>();
+        string dato = IngresarString(m + "Finalizar con \"-1\"");
+        while (dato != "-1")
+        {
+            r.Add(dato);
+            dato = IngresarString(m + "Finalizar con \"-1\"");
+        }
+        return r;
+    }
 }
