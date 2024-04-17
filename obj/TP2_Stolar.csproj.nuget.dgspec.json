@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Uriel\\Descargas\\tp2\\TP2_Stolar.csproj": {}
+    "C:\\Users\\48674459\\Downloads\\tp2\\TP2_Stolar.csproj": {}
   },
   "projects": {
-    "D:\\Uriel\\Descargas\\tp2\\TP2_Stolar.csproj": {
+    "C:\\Users\\48674459\\Downloads\\tp2\\TP2_Stolar.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Uriel\\Descargas\\tp2\\TP2_Stolar.csproj",
+        "projectUniqueName": "C:\\Users\\48674459\\Downloads\\tp2\\TP2_Stolar.csproj",
         "projectName": "TP2_Stolar",
-        "projectPath": "D:\\Uriel\\Descargas\\tp2\\TP2_Stolar.csproj",
-        "packagesPath": "C:\\Users\\ulest\\.nuget\\packages\\",
-        "outputPath": "D:\\Uriel\\Descargas\\tp2\\obj\\",
+        "projectPath": "C:\\Users\\48674459\\Downloads\\tp2\\TP2_Stolar.csproj",
+        "packagesPath": "C:\\Users\\48674459\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\48674459\\Downloads\\tp2\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ulest\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\48674459\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

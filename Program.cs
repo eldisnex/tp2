@@ -8,7 +8,7 @@ class Program
     {
         List<Persona> listaPersonas = new List<Persona>();
         Console.WriteLine("------ Control de personas ------");
-        // Menu(listaPersonas);
+        Menu(listaPersonas);
     }
 
     private static void Menu(List<Persona> l)
@@ -17,6 +17,7 @@ class Program
         while (!exit)
         {
             int c;
+            MostrarMenu();
             c = IngresarCaracter("Ingrese un numero") - '0';
             Console.WriteLine();
             switch (c)
@@ -43,13 +44,23 @@ class Program
         }
     }
 
+    private static void MostrarMenu()
+    {
+        Console.WriteLine(
+            "1. Cargar Nueva Persona\n" +
+            "2. Obtener Estadísticas del Censo\n" +
+            "3. Buscar Persona\n" +
+            "4. Modificar Mail de una Persona.\n" +
+            "5. Salir"
+        );
+    }
     // ---- Funciones menu ----
 
     // Cargar nueva persona
     public static void CargarPersona(List<Persona> l)
     {
         l.Add(new Persona(IngresarDni(), IngresarString("Ingrese apellido"), IngresarString("Ingrese nombre"), IngresarFecha("Ingrese nacimiento"), IngresarEmail()));
-        Console.WriteLine($"Se ha creado la persona {l.Last().Nombre} {l.Last().Apellido} y se ha agregado a la lista");
+        Console.WriteLine($"Se ha creado la persona {l.Last().Nombre} {l.Last().Apellido} y se ha agregado a la lista.");
     }
 
     // Obtener estadisticas del censo
@@ -60,12 +71,14 @@ class Program
         else
         {
             int votar = 0, promedio = 0;
-            foreach (Persona p in l)
-            {
-                if (p.PuedeVotar())
-                    votar += 1;
-                promedio += p.ObtenerEdad();
-            }
+            votar = (
+                from p in l
+                where p.PuedeVotar()
+                select 1).Count();
+            promedio = (
+                from p in l
+                select p.ObtenerEdad()
+            ).Sum();
             promedio /= l.Count;
             Console.WriteLine("Estadisticas del censo:");
             Console.WriteLine($"Cantidad de personas: {l.Count}");
