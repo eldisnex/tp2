@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace TP2_Stolar;
 class Program
@@ -55,16 +54,19 @@ class Program
         );
     }
     // ---- Funciones menu ----
-
     // Cargar nueva persona
     public static void CargarPersona(List<Persona> l)
     {
-        l.Add(new Persona(IngresarDni(), IngresarString("Ingrese apellido"), IngresarString("Ingrese nombre"), IngresarFecha("Ingrese nacimiento"), IngresarEmail(), IngresarSalario()));
-        if (l.Last().Salario == 0)
-            l.Last().Intereses = IngresarLista("Ingrese intereses.");
+        if (IngresarBool("Trabaja?"))
+        {
+            l.Add(new Trabajador(IngresarDni(), IngresarString("Ingrese apellido"), IngresarString("Ingrese nombre"), IngresarFecha("Ingrese nacimiento"), IngresarEmail(), IngresarDouble("Ingrese salario", 0)));
+        }
+        else
+        {
+            l.Add(new Persona(IngresarDni(), IngresarString("Ingrese apellido"), IngresarString("Ingrese nombre"), IngresarFecha("Ingrese nacimiento"), IngresarEmail()));
+        }
         Console.WriteLine($"Se ha creado la persona {l.Last().Nombre} {l.Last().Apellido} y se ha agregado a la lista.");
     }
-
     // Obtener estadisticas del censo
     public static void Censo(List<Persona> l)
     {
@@ -72,26 +74,22 @@ class Program
             Console.WriteLine("Aún no se ingresaron personas en la lista");
         else
         {
-            int votar, promedio, trabajan, porcentajeTrabajan;
-            double ingresos;
-            votar = (
-                from p in l
-                where p.PuedeVotar()
-                select 1).Count();
-            promedio = (
-                from p in l
-                select p.ObtenerEdad()
-            ).Sum() / l.Count;
-            trabajan = (
-                from p in l
-                where p.Salario > 0
-                select 1
-            ).Count();
-            ingresos = (
-                from p in l
-                where p.Salario > 0
-                select p.Salario
-            ).Sum() / trabajan;
+            int votar = 0, promedio = 0, trabajan = 0, porcentajeTrabajan;
+            double ingresos = 0;
+            foreach (Persona p in l)
+            {
+                if (p.PuedeVotar())
+                    votar++;
+                promedio += p.ObtenerEdad();
+                if (p is Trabajador t)
+                {
+                    // Si trabaja
+                    trabajan++;
+                    ingresos += t.Salario;
+                }
+            }
+            ingresos /= trabajan;
+            promedio /= l.Count;
             porcentajeTrabajan = trabajan * 100 / l.Count;
             Console.WriteLine("Estadisticas del censo:");
             Console.WriteLine($"Cantidad de personas: {l.Count}");
@@ -101,7 +99,6 @@ class Program
             Console.WriteLine($"El promedio de ingresos es {ingresos}");
         }
     }
-
     // Buscar persona
     public static void BuscarPersona(List<Persona> l)
     {
@@ -114,9 +111,11 @@ class Program
             $"Fecha de nacimiento: {l[persona].FechaNacimiento}\n" +
             $"Email: {l[persona].Email}\n" +
             $"Puede votar: {(l[persona].PuedeVotar() ? "Si" : "No")}");
-            if (l[persona].Salario > 0)
+            if (l[persona] is Trabajador t)
+                Console.WriteLine($"Su salario es de {t.Salario}");
+            else
             {
-                Console.WriteLine($"Intereses de {l[persona].Nombre} {l[persona].Apellido}");
+                Console.WriteLine($"Intereses:");
                 foreach (string interes in l[persona].Intereses)
                     Console.WriteLine($"- {interes}");
             }
@@ -124,28 +123,25 @@ class Program
         else
             Console.WriteLine("No se encuentra el DNI");
     }
-
     // Modificar mail de otra persona
     public static void ModificarMail(List<Persona> l)
     {
         int dni = IngresarDni(), persona = IndicePersona(l, dni);
-        string email;
         if (persona != -1)
-        {
-            email = IngresarEmail();
-            l[persona].Email = email;
-        }
+            l[persona].Email = IngresarEmail();
         else
             Console.WriteLine("No se encuentra el DNI en la lista");
     }
-
-    // ---- Otras funciones ----
-    private static double IngresarSalario()
+    // Agregar Intereses
+    public static void AgregarIntereses(List<Persona> l)
     {
-        if (IngresarBool("Trabaja?"))
-            return IngresarDouble("Ingrese salario", 0);
-        return 0;
+        int dni = IngresarDni(), persona = IndicePersona(l, dni);
+        if (persona != -1)
+            l[persona].Intereses.AddRange(IngresarLista("Ingrese intereses"));
+        else
+            Console.WriteLine("No se encuentra el DNI en la lista");
     }
+    // ---- Otras funciones ----
     private static int IndicePersona(List<Persona> l, int dni)
     {
         int i = l.Count - 1;
@@ -177,7 +173,7 @@ class Program
     private static string IngresarString(string m)
     {
         Console.WriteLine(m);
-        return Console.ReadLine();
+        return Console.ReadLine() ?? "";
     }
     private static int IngresarDni()
     {
@@ -194,11 +190,10 @@ class Program
         do
         {
             Console.WriteLine(m);
-            r = int.Parse(Console.ReadLine());
+            r = int.Parse(Console.ReadLine() ?? "0");
         } while (r < 0 || r < min || r > max);
         return r;
     }
-
     private static char IngresarCaracter(string m)
     {
         Console.WriteLine(m);
@@ -220,11 +215,10 @@ class Program
         do
         {
             Console.WriteLine(m);
-            r = double.Parse(Console.ReadLine());
+            r = double.Parse(Console.ReadLine() ?? "0");
         } while (r < min || r > max);
         return r;
     }
-
     private static List<string> IngresarLista(string m)
     {
         List<string> r = new List<string>();
