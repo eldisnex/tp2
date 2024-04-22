@@ -1,17 +1,17 @@
 public class Persona
 {
-    public int Dni;
-    public string Apellido, Nombre, Email;
-    public List<string> Intereses;
-    public DateTime FechaNacimiento;
-    public Persona(int dni, string ape, string nom, DateTime fnac, string email)
+    public int Dni { get; private set; }
+    public string Apellido { get; private set; }
+    public string Nombre { get; private set; }
+    public string Email;
+    public DateTime FechaNacimiento { get; private set; }
+    protected Persona(int dni, string ape, string nom, DateTime fnac, string email)
     {
         this.Dni = dni;
         this.Apellido = ape;
         this.Nombre = nom;
         this.FechaNacimiento = fnac;
         this.Email = email;
-        this.Intereses = new List<string>();
     }
     public bool PuedeVotar()
     {
@@ -27,5 +27,5 @@ public class Persona
         return y;
     }
 
-    
+
 }

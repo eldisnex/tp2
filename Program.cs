@@ -59,11 +59,25 @@ class Program
     {
         if (IngresarBool("Trabaja?"))
         {
-            l.Add(new Trabajador(IngresarDni(), IngresarString("Ingrese apellido"), IngresarString("Ingrese nombre"), IngresarFecha("Ingrese nacimiento"), IngresarEmail(), IngresarDouble("Ingrese salario", 0)));
+            l.Add(new Trabajador(
+                IngresarDni(),
+                IngresarString("Ingrese apellido"),
+                IngresarString("Ingrese nombre"),
+                IngresarFecha("Ingrese nacimiento"),
+                IngresarEmail(),
+                IngresarDouble("Ingrese salario", 0)
+            ));
         }
         else
         {
-            l.Add(new Persona(IngresarDni(), IngresarString("Ingrese apellido"), IngresarString("Ingrese nombre"), IngresarFecha("Ingrese nacimiento"), IngresarEmail()));
+            l.Add(new Desmpleado(
+                IngresarDni(),
+                IngresarString("Ingrese apellido"),
+                IngresarString("Ingrese nombre"),
+                IngresarFecha("Ingrese nacimiento"),
+                IngresarEmail(),
+                IngresarLista("Ingrese intereses")
+            ));
         }
         Console.WriteLine($"Se ha creado la persona {l.Last().Nombre} {l.Last().Apellido} y se ha agregado a la lista.");
     }
@@ -113,10 +127,10 @@ class Program
             $"Puede votar: {(l[persona].PuedeVotar() ? "Si" : "No")}");
             if (l[persona] is Trabajador t)
                 Console.WriteLine($"Su salario es de {t.Salario}");
-            else
+            else if (l[persona] is Desmpleado d)
             {
                 Console.WriteLine($"Intereses:");
-                foreach (string interes in l[persona].Intereses)
+                foreach (string interes in d.Intereses)
                     Console.WriteLine($"- {interes}");
             }
         }
@@ -136,8 +150,8 @@ class Program
     public static void AgregarIntereses(List<Persona> l)
     {
         int dni = IngresarDni(), persona = IndicePersona(l, dni);
-        if (persona != -1)
-            l[persona].Intereses.AddRange(IngresarLista("Ingrese intereses"));
+        if (persona != -1 && l[persona] is Desmpleado d)
+            d.Intereses.AddRange(IngresarLista("Ingrese intereses"));
         else
             Console.WriteLine("No se encuentra el DNI en la lista");
     }

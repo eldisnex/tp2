@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TP2_Stolar")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bfb5acbf6bd11a2cb0e2a88215e1dcb76da20b12")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+df5692278faaffc0d090b10920c42e7f52bbe120")]
 [assembly: System.Reflection.AssemblyProductAttribute("TP2_Stolar")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TP2_Stolar")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
